@@ -1,99 +1,96 @@
-#!/usr/bin/env python2
-# vim:fileencoding=UTF-8:ts=4:sw=4:sta:et:sts=4:ai
-from __future__ import with_statement
+from os import path
+from setuptools import setup, find_packages
 
-__license__   = 'GPL v3'
-__copyright__ = '2009, Kovid Goyal <kovid@kovidgoyal.net>'
-__docformat__ = 'restructuredtext en'
+with open(path.join(path.abspath(path.dirname(__file__)), "README.md")) as f:
+    long_description = f
 
-import sys, os, optparse
+setup(
+    name="calibre",
 
-sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+    # Versions should comply with PEP440.  For a discussion on single-sourcing
+    # the version across setup.py and the project code, see
+    # https://packaging.python.org/en/latest/single_source_version.html
+    version="0.0.1",
 
-import setup.commands as commands
-from setup import prints, get_warnings
+    descripton="A fork of Calibre, served as a library for ebooks handling",
+    long_description=long_description,
 
-def check_version_info():
-    vi = sys.version_info
-    if vi[0] == 2 and vi[1] > 6:
-        return None
-    return 'calibre requires python >= 2.7 and < 3'
+    # The project's main homepage.
+    url="https://github.com/kacperlukawski/calibre",
 
-def option_parser():
-    parser = optparse.OptionParser()
-    parser.add_option('-c', '--clean', default=False, action='store_true',
-            help=('Instead of running the command delete all files generated '
-                'by the command'))
-    parser.add_option('--clean-backups', default=False, action='store_true',
-            help='Delete all backup files from the source tree')
-    parser.add_option('--clean-all', default=False, action='store_true',
-            help='Delete all machine generated files from the source tree')
-    return parser
+    # Author details
+    author="Kacper Łukawski",
+    author_email="lukawski.kacper@gmail.com",
 
-def clean_backups():
-    for root, _, files in os.walk('.'):
-        for name in files:
-            for t in ('.pyc', '.pyo', '~', '.swp', '.swo'):
-                if name.endswith(t):
-                    os.remove(os.path.join(root, name))
+    # Choose your license
+    license="LGPLv3",
 
+    # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
+    classifiers=[
+        # How mature is this project? Common values are
+        #   3 - Alpha
+        #   4 - Beta
+        #   5 - Production/Stable
+        'Development Status :: 3 - Alpha',
 
-def main(args=sys.argv):
-    if len(args) == 1 or args[1] in ('-h', '--help'):
-        print 'Usage: python', args[0], 'command', '[options]'
-        print '\nWhere command is one of:'
-        print
-        for x in sorted(commands.__all__):
-            print '%-20s -'%x,
-            c = getattr(commands, x)
-            desc = getattr(c, 'short_description', c.description)
-            print desc
+        # Indicate who your project is intended for
+        'Intended Audience :: Developers',
 
-        print '\nTo get help on a particular command, run:'
-        print '\tpython', args[0], 'command -h'
-        return 1
+        # Pick your license as you wish (should match "license" above)
+        'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
 
-    command = args[1]
-    if command not in commands.__all__:
-        print command, 'is not a recognized command.'
-        print 'Valid commands:', ', '.join(commands.__all__)
-        return 1
+        # Specify the Python versions you support here. In particular, ensure
+        # that you indicate whether you support Python 2, Python 3 or both.
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+    ],
 
-    command = getattr(commands, command)
+    # What does your project relate to?
+    keywords='ebook mobi epub kindle',
 
-    parser = option_parser()
-    command.add_all_options(parser)
-    parser.set_usage('Usage: python setup.py %s [options]\n\n'%args[1]+
-            command.description)
+    # You can just specify the packages manually here if your project is
+    # simple. Or you can use find_packages().
+    packages=find_packages(where='./src', include=('calibre', )),
 
-    opts, args = parser.parse_args(args)
+    # Alternatively, if you want to distribute just a my_module.py, uncomment
+    # this:
+    #   py_modules=["my_module"],
 
-    if opts.clean_backups:
-        clean_backups()
+    # List run-time dependencies here.  These will be installed by pip when
+    # your project is installed. For an analysis of "install_requires" vs pip's
+    # requirements files see:
+    # https://packaging.python.org/en/latest/requirements.html
+    # install_requires=['peppercorn'],
 
-    if opts.clean:
-        prints('Cleaning', args[1])
-        command.clean()
-        return 0
+    # List additional groups of dependencies here (e.g. development
+    # dependencies). You can install these using the following syntax,
+    # for example:
+    # $ pip install -e .[dev,test]
+    # extras_require={
+    #     'dev': ['check-manifest'],
+    #     'test': ['coverage'],
+    # },
 
-    if opts.clean_all:
-        for cmd in commands.__all__:
-            prints('Cleaning', cmd)
-            getattr(commands, cmd).clean()
-        return 0
+    # If there are data files included in your packages that need to be
+    # installed, specify them here.  If using Python 2.6 or less, then these
+    # have to be included in MANIFEST.in as well.
+    # package_data={
+    #     'sample': ['package_data.dat'],
+    # },
 
-    command.run_all(opts)
+    # Although 'package_data' is the preferred approach, in some case you may
+    # need to place data files outside of your packages. See:
+    # http://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files # noqa
+    # In this case, 'data_file' will be installed into '<sys.prefix>/my_data'
+    # data_files=[('my_data', ['data/data_file'])],
 
-    warnings = get_warnings()
-    if warnings:
-        print
-        prints('There were', len(warnings), 'warning(s):')
-        print
-        for args, kwargs in warnings:
-            prints('*', *args, **kwargs)
-            print
-
-    return 0
-
-if __name__ == '__main__':
-    sys.exit(main())
+    # To provide executable scripts, use entry points in preference to the
+    # "scripts" keyword. Entry points provide cross-platform support and allow
+    # pip to create the appropriate form of executable for the target platform.
+    # entry_points={
+    #     'console_scripts': [
+    #         'sample=sample:main',
+    #     ],
+    # },
+)
