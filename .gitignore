@@ -26,7 +26,6 @@ icons/icns/*.iconset
 setup/installer/windows/calibre/build.log
 tags
 nbproject/
-translations/
 *.mdproj
 *.pidb
 *.sln
