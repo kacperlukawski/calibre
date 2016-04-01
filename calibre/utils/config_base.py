@@ -480,7 +480,12 @@ def write_tweaks(raw):
         f.write(raw)
 
 
-tweaks = read_tweaks()
+# TODO: put proper values for the keys
+tweaks = {
+    'gui_timestamp_display_format': None,
+    'gui_pubdate_display_format': None,
+    'gui_last_modified_display_format': None,
+}  # TODO: find a way to store the tweaks read_tweaks()
 
 def reset_tweaks_to_default():
     default_tweaks = P('default_tweaks.py', data=True,

@@ -10,7 +10,7 @@ class LoadingModulesTests(TestCase):
         try:
             from calibre.ebooks.conversion.plugins.html_input import HTMLInput
             html_input = HTMLInput
-            print(html_input)
+            self.assertEqual("<class 'calibre.ebooks.conversion.plugins.html_input.HTMLInput'>", str(html_input))
         except Exception as e:
             self.fail(str(e))
 
@@ -18,6 +18,6 @@ class LoadingModulesTests(TestCase):
         try:
             from calibre.ebooks.conversion.plugins.mobi_output import MOBIOutput
             mobi_output = MOBIOutput
-            print(mobi_output)
+            self.assertEqual("<class 'calibre.ebooks.conversion.plugins.mobi_output.MOBIOutput'>", str(mobi_output))
         except Exception as e:
             self.fail(str(e))

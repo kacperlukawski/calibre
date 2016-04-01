@@ -8,6 +8,8 @@ from collections import OrderedDict
 
 from calibre.utils.config_base import tweaks
 
+from gettext import ngettext
+
 category_icon_map = {
                     'authors'    : 'user_profile.png',
                     'series'     : 'series.png',

@@ -16,8 +16,8 @@ from calibre.utils.config_base import tweaks
 try:
     _author_pat = re.compile(tweaks['authors_split_regex'])
 except:
-    prints('Author split regexp:', tweaks['authors_split_regex'],
-            'is invalid, using default')
+    # prints('Author split regexp:', tweaks['authors_split_regex'],
+    #         'is invalid, using default')
     _author_pat = re.compile(r'(?i),?\s+(and|with)\s+')
 
 def string_to_authors(raw):

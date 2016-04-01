@@ -188,8 +188,8 @@ class Plugins(collections.Mapping):
     def __contains__(self, name):
         return name in self.plugins
 
-    # the plugins from this list will be locked using a tuple with single None
-    MOCKED_PLUGINS = ('speedup', )
+    # the plugins from this list will be locked using a tuple with None
+    MOCKED_PLUGINS = ('speedup', 'icu', )
 
     def __getitem__(self, name):
         if name not in self.plugins:
@@ -197,7 +197,7 @@ class Plugins(collections.Mapping):
         if name not in self.MOCKED_PLUGINS:
             self.load_plugin(name)
         else:
-            self._plugins[name] = (None, )
+            self._plugins[name] = (None, None, )
         return self._plugins[name]
 
 

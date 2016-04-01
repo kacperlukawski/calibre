@@ -38,13 +38,13 @@ def _init_mimetypes():
     import mimetypes
     mimetypes.init([])  # ([P('mime.types')])
     _mt_inited = True
-#
-# def guess_type(*args, **kwargs):
-#     import mimetypes
-#     if not _mt_inited:
-#         _init_mimetypes()
-#     return mimetypes.guess_type(*args, **kwargs)
-#
+
+def guess_type(*args, **kwargs):
+    import mimetypes
+    if not _mt_inited:
+        _init_mimetypes()
+    return mimetypes.guess_type(*args, **kwargs)
+
 # def guess_all_extensions(*args, **kwargs):
 #     import mimetypes
 #     if not _mt_inited:
@@ -498,7 +498,7 @@ class CurrentDir(object):
 #     return _ncpus
 #
 #
-# relpath = os.path.relpath
+relpath = os.path.relpath
 # _spat = re.compile(r'^the\s+|^a\s+|^an\s+', re.IGNORECASE)
 # def english_sort(x, y):
 #     '''
@@ -512,34 +512,34 @@ class CurrentDir(object):
 #         for f in record[-1]:
 #             yield os.path.join(record[0], f)
 #
-# def strftime(fmt, t=None):
-#     ''' A version of strftime that returns unicode strings and tries to handle dates
-#     before 1900 '''
-#     if not fmt:
-#         return u''
-#     if t is None:
-#         t = time.localtime()
-#     if hasattr(t, 'timetuple'):
-#         t = t.timetuple()
-#     early_year = t[0] < 1900
-#     if early_year:
-#         replacement = 1900 if t[0]%4 == 0 else 1901
-#         fmt = fmt.replace('%Y', '_early year hack##')
-#         t = list(t)
-#         orig_year = t[0]
-#         t[0] = replacement
-#     ans = None
-#     if iswindows:
-#         if isinstance(fmt, unicode):
-#             fmt = fmt.encode('mbcs')
-#         fmt = fmt.replace(b'%e', b'%#d')
-#         ans = plugins['winutil'][0].strftime(fmt, t)
-#     else:
-#         ans = time.strftime(fmt, t).decode(preferred_encoding, 'replace')
-#     if early_year:
-#         ans = ans.replace('_early year hack##', str(orig_year))
-#     return ans
-#
+def strftime(fmt, t=None):
+    ''' A version of strftime that returns unicode strings and tries to handle dates
+    before 1900 '''
+    if not fmt:
+        return u''
+    if t is None:
+        t = time.localtime()
+    if hasattr(t, 'timetuple'):
+        t = t.timetuple()
+    early_year = t[0] < 1900
+    if early_year:
+        replacement = 1900 if t[0]%4 == 0 else 1901
+        fmt = fmt.replace('%Y', '_early year hack##')
+        t = list(t)
+        orig_year = t[0]
+        t[0] = replacement
+    ans = None
+    if iswindows:
+        if isinstance(fmt, unicode):
+            fmt = fmt.encode('mbcs')
+        fmt = fmt.replace(b'%e', b'%#d')
+        ans = plugins['winutil'][0].strftime(fmt, t)
+    else:
+        ans = time.strftime(fmt, t).decode(preferred_encoding, 'replace')
+    if early_year:
+        ans = ans.replace('_early year hack##', str(orig_year))
+    return ans
+
 def my_unichr(num):
     try:
         return safe_chr(num)
@@ -604,9 +604,9 @@ _ent_pat = re.compile(r'&(\S+?);')
 #     '>' : '&gt;',
 #     '&' : '&amp;'})
 #
-# def replace_entities(raw, encoding='cp1252'):
-#     return _ent_pat.sub(partial(entity_to_unicode, encoding=encoding), raw)
-#
+def replace_entities(raw, encoding='cp1252'):
+    return _ent_pat.sub(partial(entity_to_unicode, encoding=encoding), raw)
+
 def xml_replace_entities(raw, encoding='cp1252'):
     return _ent_pat.sub(partial(xml_entity_to_unicode, encoding=encoding), raw)
 
@@ -668,24 +668,24 @@ def as_unicode(obj, enc=preferred_encoding):
 #         size = size[:-2]
 #     return size + sep + suffix
 #
-# def remove_bracketed_text(src,
-#         brackets={u'(':u')', u'[':u']', u'{':u'}'}):
-#     from collections import Counter
-#     counts = Counter()
-#     buf = []
-#     src = force_unicode(src)
-#     rmap = dict([(v, k) for k, v in brackets.iteritems()])
-#     for char in src:
-#         if char in brackets:
-#             counts[char] += 1
-#         elif char in rmap:
-#             idx = rmap[char]
-#             if counts[idx] > 0:
-#                 counts[idx] -= 1
-#         elif sum(counts.itervalues()) < 1:
-#             buf.append(char)
-#     return u''.join(buf)
-#
+def remove_bracketed_text(src,
+        brackets={u'(':u')', u'[':u']', u'{':u'}'}):
+    from collections import Counter
+    counts = Counter()
+    buf = []
+    src = force_unicode(src)
+    rmap = dict([(v, k) for k, v in brackets.iteritems()])
+    for char in src:
+        if char in brackets:
+            counts[char] += 1
+        elif char in rmap:
+            idx = rmap[char]
+            if counts[idx] > 0:
+                counts[idx] -= 1
+        elif sum(counts.itervalues()) < 1:
+            buf.append(char)
+    return u''.join(buf)
+
 # def ipython(user_ns=None):
 #     from calibre.utils.ipython import ipython
 #     ipython(user_ns=user_ns)
