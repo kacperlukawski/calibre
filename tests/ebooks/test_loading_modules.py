@@ -12,9 +12,9 @@ class LoadingModulesTests(TestCase):
             self.fail(str(e))
 
     def test_method_get_metadata_loaded_properly(self):
-        # try:
-        from calibre.ebooks.metadata.html import get_metadata
-        method = get_metadata
-        print(method)
-        # except Exception as e:
-        #     self.fail(str(e))
+        try:
+            from calibre.ebooks.metadata.html import get_metadata
+            method = get_metadata
+            self.assertTrue("function get_metadata" in str(method))
+        except Exception as e:
+            self.fail(str(e))
